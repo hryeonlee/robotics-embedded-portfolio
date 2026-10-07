@@ -80,7 +80,7 @@ Herkulex 라이브러리를 사용해 ID별 목표 각도와 이동 시간을 �
 | ID 3 | 150° | -50° | 300 ms |
 | ID 4 | -150° | -60° | 500 ms |
 
-- [`src/tail_movement_1.ino`](src/tail_movement_1.ino) — 프로젝트 당시 원본 (직접 작성)
+- [`src/tail_movement_1.ino`](src/tail_movement_1.ino) — 프로젝트 당시 원본 (직접 작성). 원본에 남아 있는 `MOTOR_ID_` 오타로 이 파일 그대로는 컴파일되지 않습니다.
 - [`src/tail_movement_1_cleanup.ino`](src/tail_movement_1_cleanup.ino) — 원본의 ID 오타와 미사용 변수만 정리한 사본
 - [`src/inf_turn_Herkulex.ino`](src/inf_turn_Herkulex.ino) — Herkulex 연속 회전 테스트 원본 (직접 작성)
 
