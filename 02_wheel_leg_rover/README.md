@@ -1,6 +1,6 @@
 # Wheel-leg Rover
 
-**5-person Capstone Project · Herkulex Control / Circuit Documentation / Integration Debugging**
+**5-person Capstone Project · Team Member (Tail Drive Lead) · Herkulex Control / Circuit Documentation / Integration Debugging**
 
 평지에서는 원통형 바퀴로 이동하고, 장애물 환경에서는 Wheel-leg 구조와 2-Link 꼬리를 활용하도록 설계한 탐사 로봇 프로젝트입니다.
 
@@ -36,6 +36,7 @@
   - `o`: Herkulex 연속 회전과 팀원 작성 DC 모터 함수를 조합한 휠레그 펼침 명령 작성
 - 꼬리 서보 전원 회로 및 전체 회로도를 Fritzing으로 작성
 - 통합 테스트 후 꼬리 오류의 원인 후보를 분리해 실험
+- Raspberry Pi 5 원격 환경(SSH·VNC) 구성 및 카메라 실시간 영상 송출 (Picamera2 + MJPEG 스트리밍)
 
 ### Team Scope
 
@@ -44,7 +45,6 @@
 - 주행용 기어드 DC 모터 제어 함수
 - Encoder 기반 위치 제어
 - Linear actuator 제어
-- Raspberry Pi 카메라 구현
 
 ---
 
@@ -117,7 +117,7 @@ Herkulex 라이브러리를 사용해 ID별 목표 각도와 이동 시간을 �
 
 발표 전까지 단일 원인은 확정하지 못했습니다.
 
-이후 코드를 다시 검토하며 두 번째 꼬리 ID 3·4의 `torqueON()` 누락 가능성을 발견했지만, 이는 당시 실기기에서 재검증한 원인은 아닙니다.
+이후 코드를 다시 검토하며 두 번째 꼬리 ID 3·4에 개별 `torqueON()` 호출이 없다는 점을 확인했습니다. 다만 `Herkulex.initialize()`가 전체 서보의 토크를 켜기 때문에 이것이 원인일 가능성은 낮다고 판단했고, 원인은 확정하지 못했습니다.
 
 자세한 내용: [`docs/integration-debugging.md`](docs/integration-debugging.md)
 

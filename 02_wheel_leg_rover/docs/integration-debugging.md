@@ -37,7 +37,7 @@
 - 수 초 단위의 blocking `delay()`
 - Hardware Serial1 + SoftwareSerial + encoder interrupt 동시 사용
 
-이 중 `torqueON()` 누락은 유력한 후보지만, 수정 후 실제 하드웨어에서 재시험하지 않았으므로 **검증된 원인으로 단정하지 않습니다.**
+다만 사용한 Herkulex 라이브러리의 `Herkulex.initialize()`는 `torqueON(BROADCAST)`로 **모든 서보의 토크를 켭니다.** 따라서 ID 3·4의 개별 `torqueON()` 누락만으로는 오류가 설명되지 않아 **원인일 가능성은 낮다**고 봅니다. 실제 하드웨어에서 재시험하지 않았으므로 root cause는 여전히 **미확정**입니다.
 
 ## Takeaway
 

@@ -1,10 +1,10 @@
 # Hexapod Drone Landing Gear
 
-**5-person Capstone Project · Team Lead · Control Code / Sensor Integration / Integration Debugging**
+**Capstone Project (5 members planned, 4 active) · Team Lead · Control Code / Sensor Integration / Integration Debugging**
 
 드론이 평탄하지 않은 지형에서도 착륙하고, 착륙 이후 제한적으로 보행할 수 있도록 제작한 6족 랜딩기어 프로젝트입니다.
 
-핵심 기술 과제는 **18개의 서보모터를 두 개의 PCA9685에 매핑하여 제어하고, FSR-406 입력으로 접지를 판단하며, 실제 하드웨어에서 채널·배선·기구 문제를 검증하는 것**이었습니다.
+핵심 기술 과제는 **18개의 서보모터를 두 개의 PCA9685에 매핑하여 제어하고, 압력센서(FSR) 입력으로 접지를 판단하며, 실제 하드웨어에서 채널·배선·기구 문제를 검증하는 것**이었습니다.
 
 ---
 
@@ -26,10 +26,11 @@
 
 ## My Contribution
 
-- 5인 팀 프로젝트의 팀장
+- 5인 팀(실질 4인) 프로젝트의 팀장 — 랜딩기어 파트(2명) 담당
+- 착지 감지 발 구조와 다리 링크 치수를 스케치로 설계 (3D 모델링은 팀원)
 - Arduino Mega + PCA9685 ×2 기반 **18개 서보모터 제어 코드 작성**
 - 6개 다리를 `1·3·5` / `2·4·6`으로 구분한 **Tripod gait 구동 루틴 구현**
-- FSR-406 입력을 이용한 **다리별 접지 감지 및 정지 조건 제어**
+- 압력센서(FSR) 입력을 이용한 **다리별 접지 감지 및 정지 조건 제어**
 - 다리별 Hip/Knee/Ankle과 PCA9685 채널 매핑 관리
 - 호환 서보의 기준점 차이를 고려해 다리별 각도값 보정
 - 두 번째 PCA9685에 연결된 6번 다리 미동작 문제의 채널 매핑 오류 수정
@@ -39,7 +40,7 @@
 
 ### Team Scope
 
-- 6족 랜딩기어 전체 CAD 및 기구 설계는 팀 작업
+- 랜딩기어 3D 모델링(CAD)은 팀원 작업
 - 드론 전체 제작 및 비행 제어는 팀 작업
 
 ---
@@ -47,7 +48,7 @@
 ## System Architecture
 
 ```text
-FSR-406 × 6
+Pressure sensor (FSR) × 6
     │ analog input
     ▼
 Arduino Mega
@@ -69,7 +70,7 @@ MG90S-class Servo × 18
 | Controller | Arduino Mega |
 | PWM Driver | PCA9685 × 2 |
 | Actuator | MG90S-class servo × 18 |
-| Pressure Sensor | FSR-406 × 6 |
+| Pressure Sensor | Pressure sensor (FSR) × 6 |
 | PWM Frequency | 50 Hz |
 | PCA9685 Address | 0x40 / 0x41 |
 

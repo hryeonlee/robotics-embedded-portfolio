@@ -16,13 +16,13 @@
 
 | Project | Role | Technical Focus | Evidence |
 |---|---|---|---|
-| [Hexapod Drone Landing Gear](01_hexapod_drone/) | 5인 팀 · 팀장 · 제어 코드 및 센서 연동 | Arduino Mega, PCA9685 ×2, 18-Servo Control, FSR-406, Tripod Gait | 보행·착지 GIF, Arduino 코드, PWM 채널 매핑 디버깅 |
-| [Wheel-leg Rover](02_wheel_leg_rover/) | 5인 팀 · Herkulex 구동 및 통합 테스트 | Herkulex DRS-0101, UART 115200 bps, 4-axis Tail, Integration Debugging | 꼬리 구동 GIF, 직접 작성 코드, 통합 오류 원인 분리 기록 |
+| [Hexapod Drone Landing Gear](01_hexapod_drone/) | 5인 팀(실질 4인) · 팀장 · 제어 코드 및 센서 연동 | Arduino Mega, PCA9685 ×2, 18-Servo Control, FSR, Tripod Gait | 보행·착지 GIF, Arduino 코드, PWM 채널 매핑 디버깅 |
+| [Wheel-leg Rover](02_wheel_leg_rover/) | 5인 팀 · 팀원 · 꼬리 구동부(Herkulex) 전담 및 통합 테스트 | Herkulex DRS-0101, UART 115200 bps, 4-axis Tail, Integration Debugging | 꼬리 구동 GIF, 직접 작성 코드, 통합 오류 원인 분리 기록 |
 
 ### Additional Experience
 
-- **i-HARBOR** — Raspberry Pi OS / SSH / VNC 환경 구성, Flask + gpiozero 기반 단일 서보모터·LED 웹 제어 프로토타입 구현
-- **Vibration Energy Harvesting** — 회로 구성 및 측정 코드 작성, 오실로스코프로 정류 전 원신호 측정, 무부하 상태 약 14.1 V 개방전압 확인
+- **i-HARBOR** (i-CAPS 국제 공동 캡스톤, Team 17 팀장) — Raspberry Pi OS / SSH / VNC 환경 구성, Flask + gpiozero 기반 단일 서보모터·LED 웹 제어 프로토타입 구현
+- **Vibration Energy Harvesting** — 회로 구성 및 측정 코드 작성, 오실로스코프로 정류 전 코일 출력 측정 (커서 기준 피크 간 최대 약 14.1 V, +7.64 / −6.44 V)
 
 ---
 
@@ -40,7 +40,7 @@
 
 ### 2. Sensor-Based Conditional Control
 
-FSR-406 압력센서 입력을 이용해 접지를 판단하고, 임계값 도달 시 해당 다리의 하강 동작을 멈추는 조건 제어 로직을 구현했습니다.
+압력센서(FSR) 입력을 이용해 접지를 판단하고, 임계값 도달 시 해당 다리의 하강 동작을 멈추는 조건 제어 로직을 구현했습니다.
 
 ### 3. Hardware–Software Integration
 
@@ -66,7 +66,7 @@ FSR-406 압력센서 입력을 이용해 접지를 판단하고, 임계값 도�
 | Motor Control | MG90S-class Servo, Herkulex DRS-0101 |
 | Driver / I/O | PCA9685, PWM, GPIO |
 | Communication | I2C, UART in Herkulex control system |
-| Sensor | FSR-406, HC-SR04, IR line sensor |
+| Sensor | FSR, HC-SR04, IR line sensor |
 | Test / Debug | Channel mapping, wiring check, integration test, root-cause isolation |
 | Tools | Arduino IDE, Fritzing, Oscilloscope, Git/GitHub |
 
