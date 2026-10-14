@@ -1,44 +1,41 @@
-# Integration Debugging — Tail Servo Failure
+# 통합 시험 기록 — 꼬리 서보 오류
 
-## Symptom
+## 1. 현상
 
-개별 꼬리 또는 2-servo 구성에서는 동작했지만 전체 시스템 통합 후 4-servo 꼬리 구성에서 오류가 발생했습니다.
+팀 통합 코드 실행 시 꼬리 서보 오류 발생. 시작 직후 오류가 나며 서보 LED 점멸.
 
-## Hypotheses
+## 2. 원인 후보
 
-1. Mechanical overload
-2. Overheating
-3. Power supply
-4. UART communication
-5. Motor-specific fault
-6. Communication / timing interference
+1. 과부하
+2. 과열
+3. 전원
+4. 통신
+5. 모터
+6. 코드 타이밍
 
-## Isolation
+## 3. 시험 (2024.06.24 연구노트)
 
-| Hypothesis | Test | Observation |
-|---|---|---|
-| Mechanical overload | 링크 부하 없이 꼬리만 동작 | 오류 지속 |
-| Overheating | 전원 인가 직후 오류 발생 여부 확인 | 즉시 오류 → 과열 가능성 낮음 |
-| Power supply | Herkulex 4개에 별도 전원 공급 | 오류 지속 |
-| Communication | Arduino Mega 직결, 2-servo와 4-servo 비교 | 2개 구성 동작 / 4개 구성 오류 |
-| Motor fault | 충분히 검증하지 못함 | 미확인 |
-| Timing / integration | 통합 코드 구조 재검토 | 가능성 남음 |
+| 후보 | 시험 방법 | 관찰 | 판정 |
+|---|---|---|---|
+| 과부하 | 걸림 없이 꼬리만 구동 | 오류 지속 | 배제 |
+| 과열 | 시작 직후 동작 확인 | 시작 직후 오류·LED 점멸 | 배제 |
+| 전원 | 서보 4개에만 파워서플라이로 별도 공급 | 오류 지속 | 배제 |
+| 통신 | Arduino Mega에 직접 연결해 전송 | 오류 지속 | 배제 |
+| 모터 | 미시험 | — | 미확인 |
+| 코드 타이밍 | 미시험 | — | 미확인 |
 
-## Result
+| 조건 | 결과 |
+|---|---|
+| 꼬리 1개 (서보 2개) 구동 | 정상 |
+| 꼬리 2개 (서보 4개) 연결 | 오류 |
 
-프로젝트 일정 안에 root cause를 확정하지 못했습니다.
+점검 화면 (HerkuleX Manager, 2024.06.24, ID 3): 온도 30.7 °C, 입력 7.6 V, 오류 없음.
 
+## 4. 결과
 
-## Post-Project Code Review
+원인 미확정. 4개 후보를 배제하고 "서보 4개 동시 구동"이라는 발생 조건까지 범위를 좁힘.
 
-이후 팀 통합 코드를 다시 확인하면서 다음 요소를 발견했습니다.
+## 5. 다음 적용 사항
 
-- `torqueON()`이 ID 1·2에는 호출되지만 ID 3·4에는 호출되지 않음
-- 수 초 단위의 blocking `delay()`
-- Hardware Serial1 + SoftwareSerial + encoder interrupt 동시 사용
-
-다만 사용한 Herkulex 라이브러리의 `Herkulex.initialize()`는 `torqueON(BROADCAST)`로 **모든 서보의 토크를 켭니다.** 따라서 ID 3·4의 개별 `torqueON()` 누락만으로는 오류가 설명되지 않아 **원인일 가능성은 낮다**고 봅니다. 실제 하드웨어에서 재시험하지 않았으므로 root cause는 여전히 **미확정**입니다.
-
-## Takeaway
-
-원인 후보를 목록화한 것은 유효했지만, `2 servos work → 4 servos fail`이라는 관찰을 중심으로 ID/초기화/상태 차이를 더 빠르게 비교했어야 했습니다.
+- 통합 전에 최종 구성(서보 4개 동시)으로 먼저 시험.
+- "2개 정상 / 4개 오류"처럼 결과가 갈리면 ID, 초기화 순서, 서보 상태 값을 조건별로 바로 기록해 비교.

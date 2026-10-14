@@ -1,142 +1,103 @@
-# Wheel-leg Rover
+# Wheel-leg 탐사 로봇 (Wheel-leg Rover)
 
-**5-person Capstone Project · Team Member (Tail Drive Lead) · Herkulex Control / Circuit Documentation / Integration Debugging**
+| 항목 | 내용 |
+|---|---|
+| 과목 | 캡스톤디자인2 (2024.03–06) |
+| 팀 | 5인 |
+| 역할 | 팀원, 꼬리 구동부 전담 — Herkulex 서보 제어, 회로도, 통합 시험 |
+| 수상 | 2024 캡스톤디자인 경진대회 우수상, 2024 창의대첩 창의상 (팀) |
 
-평지에서는 원통형 바퀴로 이동하고, 장애물 환경에서는 Wheel-leg 구조와 2-Link 꼬리를 활용하도록 설계한 탐사 로봇 프로젝트입니다.
+## 1. 개요
 
-제 역할은 전체 CAD 설계가 아니라 **Herkulex DRS-0101 기반 꼬리·휠레그 서보 구동, 회로 정리, 팀 통합 코드 내 담당 명령 작성, 그리고 통합 테스트 오류 분리**였습니다.
+평지에서는 원통형 몸체로 굴러가고, 험지에서는 바퀴를 펼쳐(Wheel-leg) 이동하는 탐사 로봇.
+2-Link 꼬리로 지면을 밀어 전진을 돕고 무게중심을 조정함.
 
----
+## 2. 시연
 
-## Demo
-
-| Tail control | 2-axis tail servo test |
+| 꼬리 구동 | 꼬리 2축 서보 시험 |
 |---|---|
 | ![Tail control](media/tail_control_test.gif) | ![Tail 2-axis](media/tail_servo_2axis_test.gif) |
 
-| Herkulex continuous rotation | Tail servo power circuit (Fritzing) |
+| Herkulex 연속 회전 시험 | 꼬리 서보 전원 회로 (Fritzing) |
 |---|---|
 | ![Continuous rotation](media/herkulex_continuous_test.gif) | ![Circuit](media/circuit_tail_servo_power.png) |
 
-| Team Outcome — driving | Team Outcome — wheel-leg deployed |
+| [팀 결과] 주행 | [팀 결과] 바퀴 펼침 |
 |---|---|
 | ![Driving](media/driving_turns.gif) | ![Wheel-leg](media/wheel_leg_open.gif) |
 
----
-
-## My Contribution
-
-- Herkulex Manager를 이용한 서보 ID 설정 및 단독 구동 확인
-- 좌·우 2-Link 꼬리의 Herkulex 서보 4개 제어
-- 꼬리 서보의 목표 각도와 이동 시간 설계
-- `tail_movement` 계열 제어 코드 직접 작성
-- 휠레그 기어 구동용 Herkulex 2개의 연속 회전 테스트 코드 작성
-- 팀 통합 코드 `final.ino`에서
-  - `k`: 꼬리 2개 × 2축의 돌출/복귀 명령 작성
-  - `o`: Herkulex 연속 회전과 팀원 작성 DC 모터 함수를 조합한 휠레그 펼침 명령 작성
-- 꼬리 서보 전원 회로 및 전체 회로도를 Fritzing으로 작성
-- 통합 테스트 후 꼬리 오류의 원인 후보를 분리해 실험
-- Raspberry Pi 5 원격 환경(SSH·VNC) 구성 및 카메라 실시간 영상 송출 (Picamera2 + MJPEG 스트리밍)
-
-### Team Scope
-
-- Wheel-leg 전체 CAD 모델링 및 기구 설계
-- Bluetooth 제어 코드
-- 주행용 기어드 DC 모터 제어 함수
-- Encoder 기반 위치 제어
-- Linear actuator 제어
-
----
-
-## Herkulex Control Structure
+## 3. 시스템 구성 (꼬리·휠레그 구동부)
 
 ```text
-Arduino Mega
-    │
-    │ UART / Serial1, 115200 bps
+Arduino Mega 2560
+    │ UART (Serial1), 115200 bps
     ▼
-Herkulex DRS-0101
-    ├─ Tail Left  : 2 servos
-    ├─ Tail Right : 2 servos
-    └─ Wheel-leg gear drive : 2 servos
+Herkulex 서보
+    ├─ 왼쪽 꼬리 : 2축 (ID 1, 2)
+    ├─ 오른쪽 꼬리 : 2축 (ID 3, 4)
+    └─ 휠레그 기어 구동 : 연속 회전 2개 (ID 5, 6)
 ```
 
-Herkulex 라이브러리를 사용해 ID별 목표 각도와 이동 시간을 전달했습니다.
+## 4. 담당 범위
 
+| 구분 | 내용 |
+|---|---|
+| 본인 | 2-Link 꼬리 구조 구체화·스케치 (팀원과 함께, 모델링은 팀원) |
+| 본인 | HerkuleX Manager로 서보 ID 설정, 단독 구동 확인 |
+| 본인 | 꼬리 서보 4개 제어 코드 작성, 축별 목표 각도·이동 시간 설계 |
+| 본인 | 휠레그 기어 구동용 Herkulex 2개 연속 회전 시험 코드 작성 |
+| 본인 | 팀 통합 코드의 `k`(꼬리 돌출·복귀), `o`(휠레그 펼침) 명령 작성 |
+| 본인 | 꼬리 서보 전원 회로 및 전체 회로도 작성 (Fritzing) |
+| 본인 | 통합 후 꼬리 오류의 원인 후보 분리 시험 |
+| 본인 | Raspberry Pi 5 원격 환경(SSH·VNC) 구성, 카메라 실시간 송출 (Picamera2 + MJPEG) |
+| 팀 | 전체 기구 설계·CAD, Bluetooth 제어, 기어드 DC 모터 주행, 엔코더 기반 위치 제어, 리니어 액추에이터 |
 
----
-
-## Tail Motion
-
-한쪽 꼬리의 두 축은 서로 다른 각도 범위와 이동 시간을 사용했습니다.
+## 5. 꼬리 동작 설계
 
 설계 메모 (연구노트, 2024.06.13):
 
 ![Tail angle design note](media/note_0613_tail_angle.png)
 
-
-| Servo | Position A | Position B | Move Time |
+| 서보 | 위치 A | 위치 B | 이동 시간 |
 |---|---:|---:|---:|
-| ID 3 | 150° | -50° | 300 ms |
-| ID 4 | -150° | -60° | 500 ms |
+| ID 3 | 150° | −50° | 300 ms |
+| ID 4 | −150° | −60° | 500 ms |
 
-- [`src/tail_movement_1.ino`](src/tail_movement_1.ino) — 프로젝트 당시 원본 (직접 작성). 원본에 남아 있는 `MOTOR_ID_` 오타로 이 파일 그대로는 컴파일되지 않습니다.
-- [`src/tail_movement_1_cleanup.ino`](src/tail_movement_1_cleanup.ino) — 원본의 ID 오타와 미사용 변수만 정리한 사본
-- [`src/inf_turn_Herkulex.ino`](src/inf_turn_Herkulex.ino) — Herkulex 연속 회전 테스트 원본 (직접 작성)
+| 파일 | 내용 |
+|---|---|
+| [`src/tail_movement_1.ino`](src/tail_movement_1.ino) | 꼬리 구동 원본 (본인 작성, 오타 1곳 포함) |
+| [`src/tail_movement_1_cleanup.ino`](src/tail_movement_1_cleanup.ino) | 위 원본에서 ID 오타·미사용 변수만 정리한 사본 (프로젝트 이후 작성) |
+| [`src/inf_turn_Herkulex.ino`](src/inf_turn_Herkulex.ino) | Herkulex 연속 회전 시험 원본 (본인 작성) |
 
-> 정리본은 프로젝트 종료 후 가독성을 위해 만든 사본입니다.
+팀 통합 코드 중 본인 작성 부분: [`docs/integration-contribution.md`](docs/integration-contribution.md)
 
----
+## 6. 통합 시험 — 꼬리 서보 오류
 
-## Integration Contribution
+꼬리별(서보 2개씩)로 각도를 맞춘 뒤 팀 통합 코드에 합쳤고, 통합 후 꼬리 서보 오류가 발생함.
 
-팀 통합 코드에는 주행, Bluetooth, encoder, linear actuator, Herkulex가 함께 들어 있습니다.
+### 6.1 후보 시험 (2024.06.24 연구노트)
 
-전체 코드를 개인 코드로 공개하는 대신, 본인이 작성한 `k` / `o` 명령의 역할과 팀원 코드와의 경계를 별도 문서로 정리했습니다.
-
-[`docs/integration-contribution.md`](docs/integration-contribution.md)
-
----
-
-## Integration Debugging
-
-### Symptom
-
-개별 꼬리 테스트에서는 동작했지만, 전체 시스템을 하나의 코드로 통합하면 꼬리가 정상적으로 동작하지 않았습니다.
-
-### Candidate Isolation
-
-| Candidate | Test | Result |
+| 후보 | 시험 방법 | 결과 |
 |---|---|---|
-| Mechanical overload | Load 제거 후 꼬리만 구동 | 오류 지속 → 배제 |
-| Overheating | 전원 직후 오류 발생 여부 확인 | 배제 |
-| Power | 4개 서보에 별도 power supply 공급 | 오류 지속 → 배제 |
-| Communication | Mega 직결 후 2-servo / 4-servo 비교 | 2개 동작, 4개 구성에서 오류 |
-| Motor fault | 추가 검증 필요 | 미확인 |
-| Communication / timing interaction | 추가 검증 필요 | 미확인 |
+| 과부하 | 걸림 없이 꼬리만 구동 | 오류 지속 → 배제 |
+| 과열 | 시작 직후 오류 발생 여부 확인 | 시작 직후 오류·LED 점멸 → 배제 |
+| 전원 | 서보 4개에만 파워서플라이로 별도 공급 | 오류 지속 → 배제 |
+| 통신 | Arduino Mega에 직접 연결해 전송 | 오류 지속 → 배제 |
+| 모터 | — | 미확인 |
+| 코드 타이밍 | — | 미확인 |
 
-발표 전까지 단일 원인은 확정하지 못했습니다.
+- 점검 화면 (HerkuleX Manager, ID 3): 온도 30.7 °C, 입력 7.6 V, 오류 없음.
 
-이후 코드를 다시 검토하며 두 번째 꼬리 ID 3·4에 개별 `torqueON()` 호출이 없다는 점을 확인했습니다. 다만 `Herkulex.initialize()`가 전체 서보의 토크를 켜기 때문에 이것이 원인일 가능성은 낮다고 판단했고, 원인은 확정하지 못했습니다.
+### 6.2 조건 비교
 
-자세한 내용: [`docs/integration-debugging.md`](docs/integration-debugging.md)
+| 구성 | 결과 |
+|---|---|
+| 꼬리 1개 (서보 2개) | 정상 |
+| 꼬리 2개 (서보 4개) 연결 | 오류, LED 점멸 |
 
----
+### 6.3 결과
 
-## Team-Level Mechanical Issue
+- 원인 미확정. 4개 후보를 배제하고 "서보 4개 동시 구동"이라는 발생 조건까지 범위를 좁힘.
+- 다음 적용 사항: 통합 전에 최종 조건(서보 4개 동시)으로 먼저 시험하고, 정상·오류 조건의 서보 상태 값을 바로 기록.
 
-휠레그 펼침용 3D 프린팅 기어는 첫 구동에서 의도대로 펼쳐졌지만, 한 번의 테스트 만에 맞물림이 밀리며 부서지고 녹았습니다. 예산과 일정상 금속 기어로 바꿀 수 없어, 기어드 DC 모터의 토크로 바퀴를 회전시켜 펼치는 방식으로 대체했고, 원형 바퀴와 휠레그를 펼친 상태 모두에서 주행을 확인했습니다.
-
-저는 `o` 명령에서 Herkulex 연속 회전과 팀원 작성 DC 모터 함수를 함께 호출하는 통합 명령을 작성했습니다. 기어 설계와 CAD는 팀원이 담당했습니다.
-
----
-
-## Engineering Takeaway
-
-이 프로젝트에서 가장 중요한 경험은 “모든 기능이 개별적으로 동작한다”와 “전체 시스템이 통합 상태에서 동작한다”가 다르다는 점이었습니다.
-
-통합 문제를 한 원인으로 단정하지 않고,
-
-`Load → Heat → Power → UART → Motor State → Code Timing`
-
-순으로 후보를 나눠 확인하는 방식으로 접근했습니다.
+상세: [`docs/integration-debugging.md`](docs/integration-debugging.md)

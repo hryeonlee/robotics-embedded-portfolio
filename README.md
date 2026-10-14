@@ -1,101 +1,68 @@
 # Robotics & Embedded Systems Portfolio
 
-로봇·임베디드 시스템에서 **센서 입력 → 제어 판단 → 액추에이터 출력 → 실제 기구 동작**이 연결되는 과정을 구현하고 검증한 프로젝트를 정리한 포트폴리오입니다.
+센서 입력, 제어 판단, 액추에이터 출력이 연결된 실물 장치에서 제어 코드를 작성하고, 통합 단계의 오류를 시험으로 좁힌 기록을 정리한 저장소.
 
-주요 경험은 다중 서보모터 제어, 센서 기반 조건 제어, UART 기반 스마트 서보 구동, 실제 하드웨어 통합 테스트와 디버깅입니다.
-
-> Target Roles: Robotics Test / Embedded Control / System Integration / Verification & Validation
+| 항목 | 내용 |
+|---|---|
+| 작성자 | 이효련 (원광대학교 전자융합공학과 졸업) |
+| 주요 주제 | 다축 서보 제어(I2C·PWM, UART), 센서 기반 조건 제어, 통합 시험·원인 분리 |
+| 지원 분야 | Embedded Control / System Integration / Test & Validation |
 
 ---
 
-## Featured Projects
+## 1. 대표 프로젝트
 
-| 6족 랜딩기어 — Tripod gait | Wheel-leg — Herkulex tail control |
+| 6족 랜딩기어 — 트라이포드 보행 시험 | Wheel-leg — Herkulex 꼬리 구동 |
 |---|---|
 | ![Hexapod](01_hexapod_drone/media/tripod_gait_bench_test.gif) | ![Tail](02_wheel_leg_rover/media/tail_control_test.gif) |
 
-| Project | Role | Technical Focus | Evidence |
-|---|---|---|---|
-| [Hexapod Drone Landing Gear](01_hexapod_drone/) | 5인 팀(실질 4인) · 팀장 · 제어 코드 및 센서 연동 | Arduino Mega, PCA9685 ×2, 18-Servo Control, FSR, Tripod Gait | 보행·착지 GIF, Arduino 코드, PWM 채널 매핑 디버깅 |
-| [Wheel-leg Rover](02_wheel_leg_rover/) | 5인 팀 · 팀원 · 꼬리 구동부(Herkulex) 전담 및 통합 테스트 | Herkulex DRS-0101, UART 115200 bps, 4-axis Tail, Integration Debugging | 꼬리 구동 GIF, 직접 작성 코드, 통합 오류 원인 분리 기록 |
+| 프로젝트 | 기간 | 역할 | 핵심 구성 | 주요 기록 |
+|---|---|---|---|---|
+| [6족 드론 랜딩기어](01_hexapod_drone/) | 2023.09–12 | 팀장 (5인), 랜딩기어 제어·센서 | Arduino Mega, PCA9685 ×2 (I2C), MG90S ×18, 압력센서(FSR) | 18축 채널 매핑, 6번 다리 매핑 오류 수정 |
+| [Wheel-leg 탐사 로봇](02_wheel_leg_rover/) | 2024.03–06 | 팀원 (5인), 꼬리 구동부 전담 | Herkulex DRS-0101 ×4, UART 115200 bps | 통합 후 꼬리 오류의 원인 후보 시험·배제 |
 
-### Additional Experience
+## 2. 기타 경험
 
-- **i-HARBOR** (i-CAPS 국제 공동 캡스톤, Team 17 팀장) — Raspberry Pi OS / SSH / VNC 환경 구성, Flask + gpiozero 기반 단일 서보모터·LED 웹 제어 프로토타입 구현
-- **Vibration Energy Harvesting** — 회로 구성 및 측정 코드 작성, 오실로스코프로 정류 전 코일 출력 측정 (커서 기준 피크 간 최대 약 14.1 V, +7.64 / −6.44 V)
-
----
-
-## Engineering Focus
-
-### 1. Multi-Servo Control
-
-6족 드론 프로젝트에서 Arduino Mega와 PCA9685 보드 2개를 사용해 18개의 MG90S 계열 서보모터를 구동했습니다.
-
-각 액추에이터를 단순히 개별 제어하는 데 그치지 않고,
-
-`Leg → Joint → Servo ID → PCA9685 Board → PWM Channel`
-
-매핑을 관리하며 실제 배선과 제어 코드가 일치하는지 검증했습니다.
-
-### 2. Sensor-Based Conditional Control
-
-압력센서(FSR) 입력을 이용해 접지를 판단하고, 임계값 도달 시 해당 다리의 하강 동작을 멈추는 조건 제어 로직을 구현했습니다.
-
-### 3. Hardware–Software Integration
-
-실제 프로젝트에서는 코드만 정상이라고 해서 시스템이 정상적으로 동작하지 않았습니다.
-
-문제가 발생하면 다음 범주를 분리해 확인했습니다.
-
-`Power → Wiring → Communication → Control Code → Channel Mapping → Mechanical Coupling`
-
-### 4. Root-Cause Isolation
-
-- 6족 드론: 6번 다리 미동작 → 실제 PWM 채널과 코드 매핑 불일치 확인 → 재매핑
-- Wheel-leg: 통합 후 꼬리 오류 → 과부하·과열·전원·통신·모터·코드 타이밍을 원인 후보로 분리해 테스트
-
----
-
-## Skills Used in Projects
-
-| Area | Verified Experience |
+| 프로젝트 | 내용 |
 |---|---|
-| Programming | Arduino C/C++, Python, basic C++ |
-| MCU / SBC | Arduino Mega, Raspberry Pi |
-| Motor Control | MG90S-class Servo, Herkulex DRS-0101 |
-| Driver / I/O | PCA9685, PWM, GPIO |
-| Communication | I2C, UART in Herkulex control system |
-| Sensor | FSR, HC-SR04, IR line sensor |
-| Test / Debug | Channel mapping, wiring check, integration test, root-cause isolation |
-| Tools | Arduino IDE, Fritzing, Oscilloscope, Git/GitHub |
-
+| i-HARBOR (i-CAPS 국제 공동 캡스톤, Team 17 팀장) | Raspberry Pi 5 OS·SSH·VNC 환경 구성, Flask + gpiozero로 서보·LED 웹 제어 프로토타입 구현 |
+| 진동 에너지 하베스팅 (창의공학설계) | 아두이노 전압 측정 회로·프로그램 작성, 오실로스코프로 정류 전 코일 출력 측정 (커서 기준 피크 간 최대 약 14.1 V, +7.64 / −6.44 V) |
 
 ---
 
-## Repository Structure
+## 3. 기술 요약
+
+| 영역 | 사용 내용 | 근거 |
+|---|---|---|
+| 언어 | C (Arduino), Python | 각 프로젝트 `src/` |
+| MCU / SBC | Arduino Mega 2560, Raspberry Pi 5 | 6족, Wheel-leg, i-HARBOR |
+| 인터페이스 | I2C (PCA9685 0x40/0x41), PWM 50 Hz, UART (Herkulex 115200 bps), GPIO | 6족, Wheel-leg |
+| 액추에이터 | MG90S 호환 서보 ×18, Herkulex 서보 ×6 (꼬리 4, 휠레그 기어 2) | 6족, Wheel-leg |
+| 센서 | 압력센서(FSR) | 6족 |
+| 시험·계측 | 채널 매핑 대조, 원인 후보별 분리 시험, 오실로스코프, HerkuleX Manager | 6족, Wheel-leg, 하베스팅 |
+| 도구 | Arduino IDE, Fritzing, Git/GitHub | — |
+
+---
+
+## 4. 저장소 구성
 
 ```text
 .
-├── 01_hexapod_drone/
+├── 01_hexapod_drone/      # 6족 드론 랜딩기어
+│   ├── README.md
+│   ├── src/               # 프로젝트 당시 원본 코드
+│   ├── docs/              # 디버깅 기록
+│   └── media/
+├── 02_wheel_leg_rover/    # Wheel-leg 탐사 로봇
 │   ├── README.md
 │   ├── src/
 │   ├── docs/
 │   └── media/
-├── 02_wheel_leg_rover/
-│   ├── README.md
-│   ├── src/
-│   ├── docs/
-│   └── media/
-└── NOTICE.md
+└── NOTICE.md              # 팀 프로젝트 자료의 공개 범위
 ```
 
----
+## 5. 작성 기준
 
-## Collaboration & Scope
-
-이 저장소의 대표 프로젝트는 팀 프로젝트입니다.
-
-각 프로젝트 README에서 **My Contribution**과 **Team Scope**를 구분해 정리했습니다.
-
-공개된 코드는 직접 작성한 코드 또는 직접 작성한 부분을 기준으로 정리한 포트폴리오용 자료입니다.
+- 대표 프로젝트는 모두 팀 프로젝트이며, 각 README에서 **담당 범위**와 **팀 범위**를 구분함.
+- `src/`의 코드는 본인이 작성한 프로젝트 당시 원본이며, 이후 정리한 사본은 파일명과 설명에 별도로 표기함.
+- 원인을 확정하지 못한 문제는 "미확정"으로 기록함.

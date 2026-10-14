@@ -1,174 +1,116 @@
-# Hexapod Drone Landing Gear
+# 6족 드론 랜딩기어 (Hexapod Drone Landing Gear)
 
-**Capstone Project (5 members planned, 4 active) · Team Lead · Control Code / Sensor Integration / Integration Debugging**
+| 항목 | 내용 |
+|---|---|
+| 과목 | 캡스톤디자인1 (2023.09–12) |
+| 팀 | 5인 — 드론 파트 / 랜딩기어 파트(2인) |
+| 역할 | 팀장, 랜딩기어 파트 — 발 구조 구상, 부품 선정, 회로, 제어 코드, 센서 |
+| 수상 | 2023학년도 2학기 LINC 3.0 스마트팩토링 창의대첩 창의상 (팀) |
 
-드론이 평탄하지 않은 지형에서도 착륙하고, 착륙 이후 제한적으로 보행할 수 있도록 제작한 6족 랜딩기어 프로젝트입니다.
+## 1. 개요
 
-핵심 기술 과제는 **18개의 서보모터를 두 개의 PCA9685에 매핑하여 제어하고, 압력센서(FSR) 입력으로 접지를 판단하며, 실제 하드웨어에서 채널·배선·기구 문제를 검증하는 것**이었습니다.
+경사·요철 지면에서도 착지할 수 있도록 드론 하부에 2-Link 다리 6개를 단 랜딩기어.
+압력센서(FSR)로 다리별 접지를 감지해 하강을 멈추고, 트라이포드 보행으로 짧은 지상 이동을 하는 것이 목표.
 
----
+## 2. 시연
 
-## Demo
-
-| Tripod gait bench test | Uneven-ground landing |
+| 트라이포드 보행 시험 (거치) | 요철 지면 다리별 착지 정지 |
 |---|---|
 | ![Tripod gait](media/tripod_gait_bench_test.gif) | ![Per-leg stop](media/per_leg_stop_uneven_ground.gif) |
 
-| Ground walking | Final assembly |
+| 지면 보행 | 드론 결합 |
 |---|---|
 | ![Walking](media/walking_on_ground.gif) | ![Assembly](media/drone_landing_gear_assembled.png) |
 
-| 18-servo test before assembly | FSR input test |
+| 조립 전 18축 서보 시험 | 압력센서 입력 시험 |
 |---|---|
 | ![Servo test](media/servo_18ch_test.gif) | ![FSR test](media/pressure_sensor_test.gif) |
 
----
-
-## My Contribution
-
-- 5인 팀(실질 4인) 프로젝트의 팀장 — 랜딩기어 파트(2명) 담당
-- 다리 끝 판·봉이 압력센서를 누르는 착지 감지 발 구조를 스케치로 구상해 적용 (다리 링크는 기존 설계 구조를 사용, 3D 모델링은 팀원)
-- Arduino Mega + PCA9685 ×2 기반 **18개 서보모터 제어 코드 작성**
-- 6개 다리를 `1·3·5` / `2·4·6`으로 구분한 **Tripod gait 구동 루틴 구현**
-- 압력센서(FSR) 입력을 이용한 **다리별 접지 감지 및 정지 조건 제어**
-- 다리별 Hip/Knee/Ankle과 PCA9685 채널 매핑 관리
-- 호환 서보의 기준점 차이를 고려해 다리별 각도값 보정
-- 두 번째 PCA9685에 연결된 6번 다리 미동작 문제의 채널 매핑 오류 수정
-- 압력센서 연결 불량 보완
-- 서보 교체·재조립 이후 배선과 채널 매핑 재검증
-- 드론 결합 단계에서 배선 간섭 확인 및 개선
-
-### Team Scope
-
-- 랜딩기어 3D 모델링(CAD)은 팀원 작업
-- 드론 전체 제작 및 비행 제어는 팀 작업
-
----
-
-## System Architecture
+## 3. 시스템 구성
 
 ```text
-Pressure sensor (FSR) × 6
-    │ analog input
+압력센서(FSR) × 6
+    │ 아날로그 입력
     ▼
-Arduino Mega
+Arduino Mega 2560
     │ I2C
-    ├───────────────┐
-    ▼               ▼
-PCA9685 #1       PCA9685 #2
-0x40             0x41
-15 servos        3 servos
-    │               │
-    └──────┬────────┘
-           ▼
-MG90S-class Servo × 18
-6 legs × Hip / Knee / Ankle
+    ├────────────────┐
+    ▼                ▼
+PCA9685 #1 (0x40)  PCA9685 #2 (0x41)
+다리 1–5 (15채널)   다리 6 (3채널)
+    │                │
+    └──────┬─────────┘
+           ▼ PWM 50 Hz
+MG90S 호환 서보 × 18  (다리 6개 × Hip / Knee / Ankle)
 ```
 
-| Item | Configuration |
+| 항목 | 사양 |
 |---|---|
-| Controller | Arduino Mega |
-| PWM Driver | PCA9685 × 2 |
-| Actuator | MG90S-class servo × 18 |
-| Pressure Sensor | Pressure sensor (FSR) × 6 |
-| PWM Frequency | 50 Hz |
-| PCA9685 Address | 0x40 / 0x41 |
+| 제어기 | Arduino Mega 2560 (아날로그 입력 6개 필요로 Uno에서 변경) |
+| PWM 드라이버 | PCA9685 × 2, I2C 주소 0x40 / 0x41 |
+| 액추에이터 | MG90S 호환 서보 × 18 |
+| 센서 | 압력센서(FSR) × 6 |
+| PWM 주파수 | 50 Hz, 펄스폭 매핑 123–492 (4096 단위) |
 
----
+## 4. 담당 범위
 
-## Control Logic
+| 구분 | 내용 |
+|---|---|
+| 본인 | 착지 감지 발 구조 스케치·적용 (다리 끝 판·봉이 압력센서를 누르는 구조) |
+| 본인 | 부품 선정: MG90S(크기·무게), PCA9685(가격·사양 비교) |
+| 본인 | 회로 설계 (Fritzing), PCA9685 2장 주소 분리 |
+| 본인 | 제어 코드: 18축 서보 제어, 트라이포드 보행 루틴, 압력 임계값 착지 정지 |
+| 본인 | 시험·디버깅: 채널 매핑 대조, 압력센서 연결부 보완, 서보 교체 후 배선·채널 재확인 |
+| 팀 | 다리 링크 형상(기존 설계 구조), 랜딩기어 3D 모델링, 드론 제작·비행 |
 
-### Tripod Gait
+## 5. 제어 로직
+
+### 5.1 트라이포드 보행
 
 ```text
-Group A = Legs 1, 3, 5
-Group B = Legs 2, 4, 6
+A군 = 다리 1·3·5, B군 = 다리 2·4·6
 
-A move / B support
-        ↓
-A lower
-        ↓
-B move / A support
-        ↓
-B lower
-        ↓
-repeat
+A군 이동 / B군 지지 → A군 하강 → B군 이동 / A군 지지 → B군 하강 → 반복
 ```
 
-원본 프로젝트 코드(주석 포함 원문 그대로)에서는 각 다리의 Hip 각도를 개별 보정 배열로 관리하고, Knee/Ankle 각도를 단계별로 변경했습니다.
+- 다리별 Hip 각도는 보정 배열로 관리 (호환 서보의 개체별 기준점 차이 보정).
+- 코드: [`src/six_legged_walking.ino`](src/six_legged_walking.ino)
 
-대표 코드: [`src/six_legged_walking.ino`](src/six_legged_walking.ino)
-
-### FSR Landing Detection
+### 5.2 압력센서 착지 정지
 
 ```text
-Fold leg
-   ↓
-Extend Knee + Ankle gradually
-   ↓
-Read FSR
-   ↓
-Threshold reached?
- ┌── No → Continue extending
- └── Yes → Stop current leg
+다리 접기 → Knee·Ankle 단계적 전개 → FSR 읽기 → 임계값 도달 시 해당 다리 정지
 ```
 
-단일 다리 검증 코드: [`src/one_legged_landing_gear.ino`](src/one_legged_landing_gear.ino)
+- 정지 후 `loop()`가 처음부터 다시 실행되지 않도록 `while(1)` 대기 루프로 마지막 자세 유지.
+- 코드: [`src/one_legged_landing_gear.ino`](src/one_legged_landing_gear.ino) (단일 다리 시험)
 
----
+## 6. 시험 및 문제 해결
 
-## Key Debugging — Leg 6 Channel Mapping
+| 문제 | 확인 방법 | 원인 | 조치 |
+|---|---|---|---|
+| 18축 연결 후 6번 다리만 동작하지 않음 | 첫 번째 보드의 다리는 정상 → 두 번째 PCA9685만 분리해 단독 시험 | 두 번째 보드 채널과 코드의 서보 번호 매핑 불일치 | 6번 다리 Hip/Knee/Ankle을 두 번째 보드 0·1·2 채널로 재매핑 |
+| 같은 각도 명령에도 다리마다 자세가 다름 | 다리별 자세 비교 | 호환 서보 개체별 기준점 차이 | 다리별 Hip 각도 배열로 보정 |
 
-### Symptom
+상세: [`docs/debugging-channel-mapping.md`](docs/debugging-channel-mapping.md)
 
-두 번째 PCA9685 보드에 연결된 6번 다리가 정상적으로 움직이지 않았습니다.
+## 7. 결과
 
-### Isolation
+- 랜딩기어 단독: 요철 지면 다리별 착지 정지, 트라이포드 전진 보행 확인.
 
-1. Servo 상태 확인
-2. Wiring 확인
-3. PCA9685 출력 위치 확인
-4. 코드 내 Servo 번호 확인
-5. 실제 연결 채널과 코드 매핑 비교
+## 8. 개선 과제 (프로젝트 이후 재검토)
 
-### Root Cause
+- `delay()` 기반 순차 동작 → 비차단(non-blocking) 상태 기계로 변경
+- 다리별 각도·채널 상수 분산 → 다리 설정 구조체로 통합
+- 센서 임계값을 센서별 보정값으로 분리 관리
 
-코드상의 서보 번호와 실제 두 번째 PCA9685 채널 연결이 일치하지 않았습니다.
+## 9. 파일
 
-### Fix
-
-6번 다리의 Hip/Knee/Ankle을 두 번째 PCA9685의 `0 / 1 / 2` 채널로 다시 매핑했습니다.
-
-자세한 정리: [`docs/debugging-channel-mapping.md`](docs/debugging-channel-mapping.md)
-
-## Other Hardware Issues
-
-| Issue | Cause | Action |
-|---|---|---|
-| 서보 대부분 손상 | 서보 전원에 잘못된 전압 인가 | 서보 교체·재조립, 배선과 채널 매핑 재검증 |
-| 같은 각도 명령에도 다리마다 자세가 다름 | 호환 서보는 무전원 상태에서 축을 돌리면 각도 기준점이 바뀜 | 다리별 Hip 각도 배열로 보정 (코드에 40°~150°로 남아 있음) |
-
----
-
-## Engineering Review
-
-원본 코드는 실제 학부 프로젝트에서 작성한 실험·제어 코드입니다. 이후 다시 검토하면서 다음 개선점을 확인했습니다.
-
-- `delay()` 중심의 blocking sequence → non-blocking state machine으로 개선 가능
-- 각도와 채널 상수가 여러 위치에 분산 → leg configuration 구조체로 통합 가능
-- 보행 주기 중 지지 다리가 불명확해지는 단계 존재 → support phase 재설계 필요
-- 센서 임계값 → 개별 센서 calibration 값을 별도로 관리하는 구조가 적절
-
-이 저장소에서는 당시 실제 구현을 과장해 다시 쓰기보다, **원본이 어떤 구조였고 현재 기준에서 무엇을 개선할 수 있는지**를 함께 보여줍니다.
-
----
-
-## Source Files
-
-| File | Purpose |
+| 파일 | 내용 |
 |---|---|
-| [`six_legged_walking.ino`](src/six_legged_walking.ino) | 18-servo Tripod gait control |
-| [`one_legged_landing_gear.ino`](src/one_legged_landing_gear.ino) | FSR threshold-based landing test |
-| [`force_link_test.ino`](src/force_link_test.ino) | Basic FSR input test (LED brightness) |
+| [`src/six_legged_walking.ino`](src/six_legged_walking.ino) | 18축 트라이포드 보행 |
+| [`src/one_legged_landing_gear.ino`](src/one_legged_landing_gear.ino) | 압력 임계값 착지 정지 (단일 다리) |
+| [`src/force_link_test.ino`](src/force_link_test.ino) | 압력센서 입력 시험 (LED 밝기) |
 
-공개한 코드는 프로젝트 당시 원본 그대로이며 주석도 수정하지 않았습니다. 개발 중 상태로 남아 컴파일 오류가 있는 `six_legged_landing_gear.ino`는 공개 대표 코드에서 제외했습니다.
+- 모든 코드는 프로젝트 당시 원본이며 주석도 수정하지 않음.
+- 개발 중 상태로 컴파일 오류가 있는 `six_legged_landing_gear.ino`는 제외함.

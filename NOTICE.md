@@ -1,12 +1,11 @@
 # NOTICE
 
-This repository is a personal engineering portfolio.
+개인 엔지니어링 포트폴리오 저장소.
 
-Some projects were completed as team projects. Team-level results are explicitly labeled as **Team Outcome**, and individual contributions are described separately.
+- 대표 프로젝트는 팀 프로젝트이며, 팀 결과물은 **[팀 결과]**로 표기하고 본인 작업과 구분함.
+- 팀원이 만든 CAD·기구 설계는 본인 작업으로 표기하지 않음.
+- 여러 사람이 작성한 통합 코드는 전체를 공개하지 않고, 본인 작성 부분만 별도 문서로 정리함.
+- 프로젝트 이후 정리한 코드 사본은 파일명과 설명에 표기함.
+- 팀이 만든 사진·영상·도면은 포트폴리오 사용이 허락된 경우에만 올림.
 
-- CAD and mechanical designs created by teammates are not presented as the author's individual work.
-- Mixed-authorship integration code is not published as solely authored code.
-- Portfolio-reviewed code is clearly labeled when it was cleaned up after the original project.
-- Team-created photos, diagrams, or videos should only be uploaded when their use for portfolio purposes is permitted.
-
-No open-source license is attached to this repository because some project artifacts originated from collaborative academic work.
+공동 학업 결과물이 포함되어 있어 오픈소스 라이선스를 붙이지 않음.

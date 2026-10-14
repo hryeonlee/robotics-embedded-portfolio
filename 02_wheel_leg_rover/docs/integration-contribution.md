@@ -1,10 +1,9 @@
-# Integration Code Contribution
+# 팀 통합 코드 중 본인 작성 부분
 
-`final.ino`는 팀 공동 통합 코드였습니다. 이 문서에는 그중 직접 작성한 명령의 역할만 정리합니다.
+`final.ino`는 팀 공동 통합 코드임. 이 문서는 그중 본인이 작성한 명령만 정리함.
 
-## `k` — Tail deployment / return
+## 1. `k` — 꼬리 돌출·복귀
 
-본인이 작성한 영역:
 
 ```cpp
 else if (car == 'k') {
@@ -24,11 +23,11 @@ else if (car == 'k') {
 }
 ```
 
-Herkulex ID 1~4를 사용해 좌우 꼬리의 두 축을 함께 이동시키는 명령입니다.
+Herkulex ID 1–4로 좌우 꼬리의 두 축을 함께 이동시키는 명령.
 
-## `o` — Wheel-leg gear actuation
+## 2. `o` — 휠레그 펼침
 
-본인이 작성한 통합 명령은 Herkulex ID 5·6을 연속 회전시키면서 팀원이 작성한 DC motor helper function을 호출하는 구조였습니다.
+Herkulex ID 5·6을 연속 회전시키면서 팀원이 작성한 DC 모터 함수를 호출하는 구조.
 
 ```cpp
 else if (car == 'o') {
@@ -47,19 +46,17 @@ else if (car == 'o') {
 }
 ```
 
-## Ownership Boundary
+## 3. 작성 범위
 
-직접 작성:
-- Herkulex tail motion
-- Herkulex continuous rotation control
-- `k` command
-- `o` command에서 Herkulex 명령과 팀 함수 호출을 조합한 통합 흐름
+본인 작성:
+- Herkulex 꼬리 동작
+- Herkulex 연속 회전 제어
+- `k` 명령
+- `o` 명령 중 Herkulex 명령과 팀 함수 호출을 묶은 흐름
 
 팀원 작성:
-- `rot()` 내부의 DC motor drive logic
-- `Stop3()` 내부의 DC motor stop logic
-- Bluetooth base control
-- encoder P-control
-- linear actuator functions
-
-
+- `rot()` 내부의 DC 모터 구동
+- `Stop3()` 내부의 DC 모터 정지
+- Bluetooth 기본 제어
+- 엔코더 P 제어
+- 리니어 액추에이터 함수
