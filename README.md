@@ -25,7 +25,7 @@
 
 | 프로젝트 | 내용 |
 |---|---|
-| i-HARBOR (i-CAPS 국제 공동 캡스톤, Team 17 팀장) | Raspberry Pi 5 OS·SSH·VNC 환경 구성, Flask + gpiozero로 서보·LED 웹 제어 프로토타입 구현 |
+| i-HARBOR (i-CAPS 국제 공동 캡스톤, Team 17 팀장) | Raspberry Pi 5 OS·SSH·VNC 환경 구성, Flask + gpiozero로 서보·LED 웹 제어 기능 담당·동작 확인 |
 | 진동 에너지 하베스팅 (창의공학설계) | 아두이노 전압 측정 회로·프로그램 작성, 오실로스코프로 정류 전 코일 출력 측정 (커서 기준 피크 간 최대 약 14.1 V, +7.64 / −6.44 V) |
 
 ---
